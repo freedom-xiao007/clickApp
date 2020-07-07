@@ -7,7 +7,7 @@
 ## 界面
 &ensp;&ensp;&ensp;&ensp;基本界面如下：
 
-![](page.jpg)
+![](./page.jpg)
 
 ## 基本功能
 - 任务新增：完成
