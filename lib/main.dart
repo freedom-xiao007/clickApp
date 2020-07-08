@@ -11,6 +11,8 @@ class DataInstance {
 
   List<String> data = new List();
   bool init = false;
+  String dir;
+  File file;
 
   DataInstance._();
 
@@ -21,23 +23,26 @@ class DataInstance {
     return _instance;
   }
 
-  void initData(List<dynamic> list) {
+  void initData(List<dynamic> list) async {
     data = list;
     init = true;
+    dir = (await getApplicationDocumentsDirectory()).path;
+    file = new File('$dir/data.json');
   }
 
   /// 存储数据到文件中
   void saveData() async {
     print("Starting write file.");
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/data.json');
     if(data.length == 0) {
       file.writeAsString("");
       return;
     }
+    String contents = "";
     for(int i=0; i<data.length; i++) {
-      file.writeAsString(data[i] + "\n");
+      contents += data[i] + "\n";
     }
+    file.writeAsString(contents);
+    print("Write file end.");
   }
 }
 
@@ -79,6 +84,7 @@ class TasksViewState extends State<TasksView>{
         title: new Text('目标打卡'),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.refresh), onPressed: _refreshPage),
+//          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
           new IconButton(icon: new Icon(Icons.add), onPressed: _addTask),
         ],
       ),
@@ -131,6 +137,7 @@ class TasksViewState extends State<TasksView>{
       map = json.decode(item);
     }
     catch(Exception){
+      DataInstance.getInstance().data.remove(item);
       return false;
     }
     if(map.containsKey("complete") && map['complete'] == "1") {
@@ -192,7 +199,14 @@ class TasksViewState extends State<TasksView>{
   }
 
   String _getTaskName(String data) {
-    Map<String, dynamic> task = json.decode(data);
+    Map<String, dynamic> task;
+    try {
+      task = json.decode(data);
+    }
+    catch(Exception) {
+      DataInstance.getInstance().data.remove(data);
+      return '任务存储错误，请刷新页面';
+    }
     if(task.containsKey('name')) {
       return task['name'];
     }
@@ -264,10 +278,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                           newTask['minRepeat'] = _minRepeat.text.toString();
                           DataInstance.getInstance().data.add(json.encode(newTask));
                           DataInstance.getInstance().saveData();
-                          Navigator.push(
-                            context,
-                            new MaterialPageRoute(builder: (context) => TasksView()),
-                          );
+                          Navigator.pop(context);
                         },
                       ),
                     ],
