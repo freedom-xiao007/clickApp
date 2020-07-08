@@ -122,7 +122,7 @@ class TasksViewState extends State<TasksView>{
     String dir = (await getApplicationDocumentsDirectory()).path;
     File file = new File('$dir/data.json');
     if(file.exists() != null) {
-      List<String> list = file.readAsLinesSync();
+      List<String> list = _updateTaskStatus(file.readAsLinesSync());
       print("file contents:" + list.toString());
       return list;
     }
@@ -236,6 +236,34 @@ class TasksViewState extends State<TasksView>{
     else {
       return '任务名称未定义';
     }
+  }
+
+  /// 启动时检测当天任务状态是否重置，并进行更新操作
+  List<String> _updateTaskStatus(List<String> list) {
+    List<String> tasks = new List();
+    DateTime date = new DateTime.now();
+    String dateString = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+
+    list.forEach((element) {
+      Map<String, dynamic> task = json.decode(element);
+      Map<String, dynamic> log = json.decode(task['log']);
+
+      if(!log.containsKey(dateString)) {
+        Map<String, String> dateLog = new Map();
+        dateLog['isComplete'] = '0';
+        dateLog['time'] = '0';
+        log[dateString] = json.encode(dateLog);
+
+        task['log'] = json.encode(log);
+        task['complete'] = '0';
+        tasks.add(json.encode(task));
+      }
+      else {
+        tasks.add(element);
+      }
+    });
+
+    return tasks;
   }
 }
 
