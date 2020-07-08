@@ -105,7 +105,10 @@ class TasksViewState extends State<TasksView>{
                   ],
                 ),
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(builder: (context) => TaskLog(task: DataInstance.getInstance().data[index])),
+                  );
                 },
               );
             }),
@@ -183,15 +186,35 @@ class TasksViewState extends State<TasksView>{
   /// 任务完成打开状态切换
   void _switchState(int index) {
     Map<String, dynamic> task = json.decode(DataInstance.getInstance().data[index]);
+    String isComplete = '0';
     if(!task.containsKey('complete')) {
-      task['complete'] = '1';
+      isComplete = '1';
     }
     else if(task['complete'] == '1') {
-      task['complete'] = '0';
+      isComplete = '0';
     }
     else if(task['complete'] == '0') {
-      task['complete'] = '1';
+      isComplete = '1';
     }
+    task['complete'] = isComplete;
+
+    DateTime date = new DateTime.now();
+    String dateString = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    Map<String, dynamic> log = json.decode(task['log']);
+    if(log.containsKey(dateString)) {
+      Map<String, dynamic> dateLog = json.decode(log[dateString]);
+      dateLog['isComplete'] = isComplete;
+      dateLog['time'] = '1';
+      log[dateString] = json.encode(dateLog);
+    }
+    else {
+      Map<String, String> dateLog = new Map();
+      dateLog['isComplete'] = isComplete;
+      dateLog['time'] = '1';
+      log[dateString] = json.encode(dateLog);
+    }
+    task['log'] = json.encode(log);
+
     print("Switch state:" + json.encode(task));
     DataInstance.getInstance().data.replaceRange(index, index+1, [json.encode(task)]);
     DataInstance.getInstance().saveData();
@@ -276,9 +299,20 @@ class _AddNewTaskState extends State<AddNewTask> {
                           newTask['cycle'] = _cycle.text.toString();
                           newTask['isRepeat'] = _isRepeat.text.toString();
                           newTask['minRepeat'] = _minRepeat.text.toString();
+
+                          DateTime date = new DateTime.now();
+                          Map<String, String> dateLog = new Map();
+                          dateLog['isComplete'] = '0';
+                          dateLog['time'] = '0';
+                          String dateString = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+                          Map<String, String> log = new Map();
+                          log[dateString] = json.encode(dateLog);
+                          newTask['log'] = json.encode(log);
+
                           DataInstance.getInstance().data.add(json.encode(newTask));
                           DataInstance.getInstance().saveData();
-                          Navigator.pop(context);
+
+                          Navigator.of(context).pop();
                         },
                       ),
                     ],
@@ -380,6 +414,75 @@ class _ModifyTaskState extends State<ModifyTask> {
           )
       ),
     );
+  }
+}
+
+
+class TaskLog extends StatelessWidget {
+  final String task;
+
+  TaskLog({Key key, @required this.task}) : super();
+
+  @override
+  Widget build(BuildContext context) {
+    List<DataRow> dataRows = _getLogs(task);
+
+    return Scaffold(
+        appBar: new AppBar(
+          title: new Text('目标打卡'),
+        ),
+        body: new DataTable(
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Text(
+                '日期',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '是否完成',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '次数',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ],
+          rows: dataRows
+        )
+    );
+  }
+
+  List<DataRow> _getLogs(String task) {
+    List<DataRow> list = new List();
+
+    Map<String, dynamic> taskMap = json.decode(task);
+    Map<String, dynamic> logMap = json.decode(taskMap['log']);
+
+    logMap.forEach((key, value) {
+      Map<String, dynamic> log = json.decode(value);
+
+      String date = key.toString();
+      String isComplete = "未完成";
+      if(log['isComplete'] == '1') {
+        isComplete = "完成";
+      }
+      String count = log['time'].toString();
+
+      list.add(DataRow(
+        cells: [
+          DataCell(Text('$date')),
+          DataCell(Text('$isComplete')),
+          DataCell(Text('$count')),
+        ]
+      ));
+    });
+
+    return list;
   }
 }
 
