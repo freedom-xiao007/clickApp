@@ -26,12 +26,12 @@ class DataInstance {
   void initData(List<dynamic> list) async {
     data = list;
     init = true;
-    dir = (await getApplicationDocumentsDirectory()).path;
-    file = new File('$dir/data.json');
   }
 
   /// 存储数据到文件中
   void saveData() async {
+    dir = (await getApplicationDocumentsDirectory()).path;
+    file = new File('$dir/data.json');
     print("Starting write file.");
     if(data.length == 0) {
       file.writeAsString("");
@@ -84,7 +84,7 @@ class TasksViewState extends State<TasksView>{
         title: new Text('目标打卡'),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.refresh), onPressed: _refreshPage),
-//          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
+          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
           new IconButton(icon: new Icon(Icons.add), onPressed: _addTask),
         ],
       ),
@@ -276,8 +276,16 @@ class AddNewTask extends StatefulWidget {
 class _AddNewTaskState extends State<AddNewTask> {
   TextEditingController  _name = new TextEditingController ();
   TextEditingController  _cycle = new TextEditingController ();
+//  List<String> _cycle = new List();
   TextEditingController  _isRepeat = new TextEditingController ();
   TextEditingController  _minRepeat = new TextEditingController ();
+//  bool one = false;
+//  bool two = false;
+//  bool three = false;
+//  bool four = false;
+//  bool five = false;
+//  bool six = false;
+//  bool seven = false;
 
   @override
   Widget build(BuildContext context) {
