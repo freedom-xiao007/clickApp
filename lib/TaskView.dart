@@ -31,7 +31,7 @@ class TasksViewState extends State<TasksView>{
         title: new Text('目标打卡'),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.refresh), onPressed: _refreshPage),
-          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
+//          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
           new IconButton(icon: new Icon(Icons.add), onPressed: _addTask),
         ],
       ),
@@ -39,11 +39,11 @@ class TasksViewState extends State<TasksView>{
         child: new ListView.builder(
             itemCount: DataInstance.getInstance().data.length,
             itemBuilder: (context, index) {
-              return new ListTile(
+                return new ListTile(
                 title: new Text(_getTaskName(DataInstance.getInstance().data[index])),
                 trailing: Wrap(
                   children: <Widget>[
-                    new IconButton(icon: new Icon(
+                    !DataInstance.getInstance().show(index) ? new IconButton(icon: new Icon(Icons.pause)) : new IconButton(icon: new Icon(
                       !_isComplete(DataInstance.getInstance().data[index]) ? Icons.cancel : Icons.check,
                       color: !_isComplete(DataInstance.getInstance().data[index]) ? Colors.red : Colors.green,
                     ), onPressed: () => _switchState(index)),
