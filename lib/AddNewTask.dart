@@ -67,7 +67,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                   }
                   print(_cycleList.toString());
                   setState(() {
-                    _one = value;
+                    _two = value;
                   });
                 },
               ),

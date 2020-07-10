@@ -78,7 +78,7 @@ class _ModifyTaskState extends State<ModifyTask> {
                       }
                       print(_cycleList.toString());
                       setState(() {
-                        _one = value;
+                        _two = value;
                       });
                     },
                   ),
