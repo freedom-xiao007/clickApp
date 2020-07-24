@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:click_app/AddNewTask.dart';
+import 'package:click_app/DailyTackList.dart';
 import 'package:click_app/DataInstance.dart';
 import 'package:click_app/TaskLog.dart';
 import 'package:click_app/TaskModify.dart';
@@ -26,40 +27,32 @@ class TasksViewState extends State<TasksView>{
     }
     print("Data:" + DataInstance.getInstance().data.toString());
 
-    return new Scaffold(
+    return new DefaultTabController(
+        length: 3,
+        child: Scaffold(
       appBar: new AppBar(
         title: new Text('目标打卡'),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.refresh), onPressed: _refreshPage),
-//          new IconButton(icon: new Icon(Icons.save), onPressed: DataInstance.getInstance().saveData),
           new IconButton(icon: new Icon(Icons.add), onPressed: _addTask),
         ],
+        bottom: new TabBar(
+          isScrollable: true,
+          tabs: <Widget>[
+            Tab(text: '每日任务'),
+            Tab(text: '每周任务'),
+            Tab(text: '心愿清单'),
+          ],
+        ),
       ),
-      body: new Center(
-        child: new ListView.builder(
-            itemCount: DataInstance.getInstance().data.length,
-            itemBuilder: (context, index) {
-                return new ListTile(
-                title: new Text(_getTaskName(DataInstance.getInstance().data[index])),
-                trailing: Wrap(
-                  children: <Widget>[
-                    !DataInstance.getInstance().show(index) ? new IconButton(icon: new Icon(Icons.pause)) : new IconButton(icon: new Icon(
-                      !_isComplete(DataInstance.getInstance().data[index]) ? Icons.cancel : Icons.check,
-                      color: !_isComplete(DataInstance.getInstance().data[index]) ? Colors.red : Colors.green,
-                    ), onPressed: () => _switchState(index)),
-                    new IconButton(icon: new Icon(Icons.delete), onPressed: () => _deleteTask(index)),
-                    new IconButton(icon: new Icon(Icons.mode_edit), onPressed:() => _modifyTask(index)),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    new MaterialPageRoute(builder: (context) => TaskLog(task: DataInstance.getInstance().data[index])),
-                  );
-                },
-              );
-            }),
+      body: new TabBarView(
+        children: <Widget>[
+          Center(child: new DailyTaskListView()),
+          Center(child: new DailyTaskListView()),
+          Center(child: new DailyTaskListView()),
+        ],
       ),
+    )
     );
   }
 
@@ -211,5 +204,41 @@ class TasksViewState extends State<TasksView>{
     });
 
     return tasks;
+  }
+}
+
+class Choice {
+  const Choice({ this.title, this.icon });
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'CAR', icon: Icons.directions_car),
+  const Choice(title: 'BICYCLE', icon: Icons.directions_bike),
+  const Choice(title: 'BOAT', icon: Icons.directions_boat),
+];
+
+class ChoiceCard extends StatelessWidget {
+  const ChoiceCard({ Key key, this.choice }) : super(key: key);
+
+  final Choice choice;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle textStyle = Theme.of(context).textTheme.display1;
+    return new Card(
+      color: Colors.white,
+      child: new Center(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Icon(choice.icon, size: 128.0, color: textStyle.color),
+            new Text(choice.title, style: textStyle),
+          ],
+        ),
+      ),
+    );
   }
 }
