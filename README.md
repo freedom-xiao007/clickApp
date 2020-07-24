@@ -43,6 +43,11 @@
 }
 ```
 
+## 数据文件说明
+&ensp;&ensp;&ensp;&ensp;目前数据都使用本地文件进行保存。
+
+- data.json:存放每日任务数据（名称有点不对，可能需要重新更改，做下数据迁移）
+
 ## 错误与修复
 - Failed to install the following Android SDK packages as some licences have not been accepted.
     - flutter doctor --android-licenses

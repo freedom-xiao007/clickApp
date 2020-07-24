@@ -9,46 +9,49 @@ class DailyTaskListView extends StatefulWidget {
   createState() => new DailyTaskListState();
 }
 
-class DailyTaskListState extends State<DailyTaskListView>{
+class DailyTaskListState extends State<DailyTaskListView> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemCount: DataInstance.getInstance().data.length,
         itemBuilder: (context, index) {
           return new ListTile(
-            title: new Text(DailyTask.getTaskName(DataInstance
-                .getInstance()
-                .data[index])),
+            title: new Text(
+                DailyTask.getTaskName(DataInstance.getInstance().data[index])),
             trailing: Wrap(
               children: <Widget>[
-                !DataInstance.getInstance().show(index) ? new IconButton(
-                    icon: new Icon(Icons.pause)) : new IconButton(
-                    icon: new Icon(
-                      !DailyTask.isComplete(DataInstance
-                          .getInstance()
-                          .data[index]) ? Icons.cancel : Icons.check,
-                      color: !DailyTask.isComplete(DataInstance
-                          .getInstance()
-                          .data[index]) ? Colors.red : Colors.green,
-                    ), onPressed: () => _switchState(index)),
-                new IconButton(icon: new Icon(Icons.delete),
+                !DailyTask.show(index)
+                    ? new IconButton(icon: new Icon(Icons.pause))
+                    : new IconButton(
+                        icon: new Icon(
+                          !DailyTask.isComplete(
+                                  DataInstance.getInstance().data[index])
+                              ? Icons.cancel
+                              : Icons.check,
+                          color: !DailyTask.isComplete(
+                                  DataInstance.getInstance().data[index])
+                              ? Colors.red
+                              : Colors.green,
+                        ),
+                        onPressed: () => _switchState(index)),
+                new IconButton(
+                    icon: new Icon(Icons.delete),
                     onPressed: () => _deleteTask(index)),
-                new IconButton(icon: new Icon(Icons.mode_edit),
+                new IconButton(
+                    icon: new Icon(Icons.mode_edit),
                     onPressed: () => _modifyTask(index)),
               ],
             ),
             onTap: () {
               Navigator.push(
                 context,
-                new MaterialPageRoute(builder: (context) =>
-                    TaskLog(task: DataInstance
-                        .getInstance()
-                        .data[index])),
+                new MaterialPageRoute(
+                    builder: (context) =>
+                        TaskLog(task: DataInstance.getInstance().data[index])),
               );
             },
           );
-        }
-    );
+        });
   }
 
   _switchState(int index) {
@@ -67,7 +70,8 @@ class DailyTaskListState extends State<DailyTaskListView>{
     Navigator.push(
         context,
         new MaterialPageRoute(
-          builder: (context) => ModifyTask(task: DataInstance.getInstance().data[index]),
+          builder: (context) =>
+              ModifyTask(task: DataInstance.getInstance().data[index]),
         )
     );
   }

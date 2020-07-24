@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:click_app/DataInstance.dart';
+import 'package:path_provider/path_provider.dart';
 
+/// 每日任务函数操作类
 class DailyTask {
   /// 判断任务是否完成
   static bool isComplete(String item) {
@@ -81,5 +84,71 @@ class DailyTask {
     DataInstance.getInstance().data.removeAt(index);
     print("Delete task:" + index.toString() + "::" + DataInstance.getInstance().data.toString());
     DataInstance.getInstance().saveData();
+  }
+
+  /// 判断每日任务当天是否显示
+  static bool show(int index) {
+    String week = new DateTime.now().weekday.toString();
+    print(week);
+    Map<String, dynamic> task = json.decode(DataInstance.getInstance().data[index]);
+    List<dynamic> cycle = new List();
+    try {
+      cycle = json.decode(task['cycle']);
+      for(int i=0; i<cycle.length; i++) {
+        if(cycle[i].toString() == week) {
+          return true;
+        }
+      }
+      return false;
+    }
+    catch(Exception) {
+      return true;
+    }
+  }
+
+  /// 初始化读取文件内容
+  static Future<List<String>> readDataFile() async {
+    print("Starting read file.");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/data.json');
+    if (file.exists() != null) {
+      List<String> list = _updateTaskStatus(file.readAsLinesSync());
+      print("file contents:" + list.toString());
+      return list;
+    }
+    else {
+      print("File is empty.");
+      List<String> list = new List();
+      return list;
+    }
+  }
+
+  /// 启动时检测当天任务状态是否重置，并进行更新操作
+  static List<String> _updateTaskStatus(List<String> list) {
+    List<String> tasks = new List();
+    DateTime date = new DateTime.now();
+    String dateString = date.year.toString() + "-" + date.month.toString() +
+        "-" + date.day.toString();
+
+    list.forEach((element) {
+      Map<String, dynamic> task = json.decode(element);
+      Map<String, dynamic> log = json.decode(task['log']);
+
+      if (!log.containsKey(dateString)) {
+        Map<String, String> dateLog = new Map();
+        dateLog['isComplete'] = '0';
+        dateLog['time'] = '0';
+        log[dateString] = json.encode(dateLog);
+
+        task['log'] = json.encode(log);
+        task['complete'] = '0';
+        tasks.add(json.encode(task));
+      }
+      else {
+        tasks.add(element);
+      }
+    });
+
+    return tasks;
   }
 }
