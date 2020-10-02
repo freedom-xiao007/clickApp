@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:click_app/model/ModulePropertyModel.dart';
+import 'package:click_app/tools/DataInstance.dart';
 import 'package:click_app/tools/TaskStatistics.dart';
 
 
@@ -23,6 +23,7 @@ class TaskTimer {
   String task;
   String module;
   bool timerPause = false;
+  DateTime begin;
 
   void start(String task, String module) {
     if (timer != null && timer.isActive) {
@@ -33,6 +34,7 @@ class TaskTimer {
     this.task = task;
     this.module = module;
     second = 0;
+    begin = DateTime.now();
     timer = new Timer.periodic(timeout, (timer) {
       handleTimeout();
     });
@@ -58,10 +60,15 @@ class TaskTimer {
   }
 
   void saveStatisticsLog() {
+    DateTime date = DateTime.now();
+    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+
     Map<String, dynamic> log = new Map();
     log["taskName"] = this.task;
     log["moduleName"] = this.module;
     log["second"] = this.second;
+    log["begin"] = this.begin.toString();
+    log["end"] = date.toString();
     TaskStatistics.add(log);
   }
 }

@@ -143,6 +143,13 @@
 }
 ```
 
+## 本地编译与安装使用
+&ensp;&ensp;&ensp;&ensp;程序在Android Studio运行后，在 build/app/outputs/apt/release/app.apk，传到手机上安装即可：
+
+- 停留在程序入口文件处（Main）
+- 上方菜单栏：Build/Flutter/Build APK
+- 等待运行完成即可
+
 ## 错误与修复
 - Failed to install the following Android SDK packages as some licences have not been accepted.
     - 使用命令：flutter doctor --android-licenses
