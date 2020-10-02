@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: '目标打卡',
       home: new TaskView(),
+
     );
   }
 }

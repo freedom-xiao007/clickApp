@@ -81,4 +81,11 @@ class TaskPropertyModel {
     }
     return false;
   }
+
+  String getModule(int index) {
+    if (tasks[index].containsKey("moduleName")) {
+      return tasks[index]["moduleName"].toString();
+    }
+    return "其他";
+  }
 }

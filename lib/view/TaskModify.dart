@@ -186,9 +186,9 @@ class _ModifyTaskState extends State<ModifyTask> {
                           newTask['cycle'] = _cycleList.toString();
                           newTask['isRepeat'] = _isRepeat.toString();
                           newTask['minRepeat'] = _minRepeat.text.toString();
-                          DataInstance.getInstance().data.remove(oldTask);
-                          DataInstance.getInstance().data.add(json.encode(newTask));
-                          DataInstance.getInstance().saveData();
+//                          DataInstance.getInstance().data.remove(oldTask);
+//                          DataInstance.getInstance().data.add(json.encode(newTask));
+//                          DataInstance.getInstance().saveData();
                           Navigator.push(
                             context,
                             new MaterialPageRoute(builder: (context) => TaskView()),

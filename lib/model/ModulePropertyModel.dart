@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
+
+enum Modules {Other, Worker, Learn, Exercise}
+
 class ModulePropertyModel {
   List<Map<String, String>> modules = new List();
 
@@ -37,9 +40,13 @@ class ModulePropertyModel {
 
   List<String> getModules() {
     List<String> moduleNames = new List();
-    modules.forEach((module) {
-      moduleNames.add(module["name"]);
-    });
+//    modules.forEach((module) {
+//      moduleNames.add(module["name"]);
+//    });
+    moduleNames.add("工作");
+    moduleNames.add("学习");
+    moduleNames.add("锻炼");
+    moduleNames.add("其他");
     return moduleNames;
   }
 

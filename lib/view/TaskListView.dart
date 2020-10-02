@@ -1,6 +1,5 @@
-import 'file:///C:/Users/12439/Documents/Code/flutter/click_app/lib/view/TaskLog.dart';
-import 'file:///C:/Users/12439/Documents/Code/flutter/click_app/lib/view/TaskModify.dart';
 import 'package:click_app/tools/DataInstance.dart';
+import 'package:click_app/tools/TaskTimer.dart';
 import 'package:flutter/material.dart';
 
 class TaskListView extends StatefulWidget {
@@ -19,7 +18,7 @@ class TaskListState extends State<TaskListView> {
             trailing: Wrap(
               children: <Widget>[
                 !DataInstance.getInstance().task.show(index)
-                    ? new IconButton(icon: new Icon(Icons.pause))
+                    ? new IconButton(icon: new Icon(Icons.close))
                     : new IconButton(
                         icon: new Icon(
                           !DataInstance.getInstance().task.isComplete(index)
@@ -30,22 +29,18 @@ class TaskListState extends State<TaskListView> {
                               : Colors.green,
                         ),
                         onPressed: () => _switchState(index)),
-                new IconButton(
-                    icon: new Icon(Icons.delete),
-                    onPressed: () => _deleteTask(index)),
-                new IconButton(
-                    icon: new Icon(Icons.mode_edit),
-                    onPressed: () => _modifyTask(index)),
+                new IconButton(icon: new Icon(Icons.timer), onPressed: () => _startTask(index)),
+                new IconButton(icon: new Icon(Icons.stop), onPressed: () => _stopTask(index)),
               ],
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                new MaterialPageRoute(
-                    builder: (context) =>
-                        TaskLog(task: DataInstance.getInstance().data[index])),
-              );
-            },
+//            onTap: () {
+//              Navigator.push(
+//                context,
+//                new MaterialPageRoute(
+//                    builder: (context) =>
+//                        TaskLog(task: DataInstance.getInstance().task.getName(index))),
+//              );
+//            },
           );
         });
   }
@@ -66,9 +61,18 @@ class TaskListState extends State<TaskListView> {
     Navigator.push(
         context,
         new MaterialPageRoute(
-          builder: (context) =>
-              ModifyTask(task: DataInstance.getInstance().data[index]),
+//          builder: (context) =>
+//              ModifyTask(task: DataInstance.getInstance().task.getName(index)),
         )
     );
+  }
+
+  _startTask(int index) {
+    TaskTimer.getInstance().start(DataInstance.getInstance().task.getName(index),
+    DataInstance.getInstance().task.getModule(index));
+  }
+
+  _stopTask(int index) {
+    TaskTimer.getInstance().stop();
   }
 }

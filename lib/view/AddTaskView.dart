@@ -14,7 +14,7 @@ class _AddTaskViewState extends State<AddTaskView> {
   bool _isDaily = false;
   List<bool> _cycleTime = [false, false, false, false, false, false, false];
   List<String> moduleNames = DataInstance.getInstance().module.getModules();
-  int selectModule = 0;
+  int _selectModule;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +63,22 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
+
+            for (var i = 0; i < moduleNames.length; i++)
+              ListTile(
+                title: Text(moduleNames[i]),
+                leading: Radio(
+                  value: i,
+                  groupValue: _selectModule,
+                  onChanged: (i) {
+                    print(i);
+                    setState(() {
+                      _selectModule = i;
+                    });
+                  },
+                ),
+              ),
+
             Builder(
               builder: (ctx) {
                 return Column(
@@ -74,6 +90,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                         newTask['name'] = _name.text;
                         newTask['cycleTime'] = _cycleTime;
                         newTask['isDaily'] = _isDaily;
+                        newTask["moduleName"] = moduleNames[_selectModule];
                         DataInstance.getInstance().task.add(newTask);
 
                         Navigator.of(context).pop();
