@@ -47,6 +47,7 @@ class ModulePropertyModel {
     moduleNames.add("学习");
     moduleNames.add("锻炼");
     moduleNames.add("其他");
+    moduleNames.add("娱乐");
     return moduleNames;
   }
 

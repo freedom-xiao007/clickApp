@@ -26,7 +26,7 @@ class TaskViewState extends State<TaskView> {
         length: 3,
         child: Scaffold(
             appBar: new AppBar(
-              title: new Text('目标打卡'),
+              title: new Text('事务打卡统计'),
               actions: <Widget>[
                 new IconButton(
                     icon: new Icon(Icons.refresh), onPressed: _refreshPage),
@@ -35,9 +35,9 @@ class TaskViewState extends State<TaskView> {
               bottom: new TabBar(
                 isScrollable: true,
                 tabs: <Widget>[
-                  Tab(text: "每日任务"),
-                  Tab(text: '每周任务'),
-                  Tab(text: '心愿清单'),
+                  Tab(text: "每日事务"),
+                  Tab(text: '每周事务'),
+                  Tab(text: '临时事务'),
                 ],
               ),
             ),
