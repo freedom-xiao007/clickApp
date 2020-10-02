@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:click_app/DataInstance.dart';
-import 'package:click_app/TaskView.dart';
+import 'package:click_app/tools/DataInstance.dart';
+import 'package:click_app/view/TaskView.dart';
 import 'package:flutter/material.dart';
 
 /// 任务修改页面
@@ -191,7 +191,7 @@ class _ModifyTaskState extends State<ModifyTask> {
                           DataInstance.getInstance().saveData();
                           Navigator.push(
                             context,
-                            new MaterialPageRoute(builder: (context) => TasksView()),
+                            new MaterialPageRoute(builder: (context) => TaskView()),
                           );
                         },
                       ),

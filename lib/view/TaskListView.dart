@@ -1,35 +1,31 @@
-import 'package:click_app/DataInstance.dart';
-import 'package:click_app/TaskLog.dart';
-import 'package:click_app/TaskModify.dart';
-import 'package:click_app/model/DailyTask.dart';
+import 'file:///C:/Users/12439/Documents/Code/flutter/click_app/lib/view/TaskLog.dart';
+import 'file:///C:/Users/12439/Documents/Code/flutter/click_app/lib/view/TaskModify.dart';
+import 'package:click_app/tools/DataInstance.dart';
 import 'package:flutter/material.dart';
 
-class DailyTaskListView extends StatefulWidget {
+class TaskListView extends StatefulWidget {
   @override
-  createState() => new DailyTaskListState();
+  createState() => new TaskListState();
 }
 
-class DailyTaskListState extends State<DailyTaskListView> {
+class TaskListState extends State<TaskListView> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-        itemCount: DataInstance.getInstance().data.length,
+        itemCount: DataInstance.getInstance().task.size(),
         itemBuilder: (context, index) {
           return new ListTile(
-            title: new Text(
-                DailyTask.getTaskName(DataInstance.getInstance().data[index])),
+            title: new Text(DataInstance.getInstance().task.getName(index)),
             trailing: Wrap(
               children: <Widget>[
-                !DailyTask.show(index)
+                !DataInstance.getInstance().task.show(index)
                     ? new IconButton(icon: new Icon(Icons.pause))
                     : new IconButton(
                         icon: new Icon(
-                          !DailyTask.isComplete(
-                                  DataInstance.getInstance().data[index])
+                          !DataInstance.getInstance().task.isComplete(index)
                               ? Icons.cancel
                               : Icons.check,
-                          color: !DailyTask.isComplete(
-                                  DataInstance.getInstance().data[index])
+                          color: !DataInstance.getInstance().task.isComplete(index)
                               ? Colors.red
                               : Colors.green,
                         ),
@@ -55,13 +51,13 @@ class DailyTaskListState extends State<DailyTaskListView> {
   }
 
   _switchState(int index) {
-    DailyTask.changeState(index);
+    DataInstance.getInstance().task.changeState(index);
     setState(() {});
   }
 
   /// 删除任务
   void _deleteTask(int index) {
-    DailyTask.deleteTask(index);
+    DataInstance.getInstance().task.deleteTask(index);
     setState(() {});
   }
 

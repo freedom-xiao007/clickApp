@@ -1,4 +1,4 @@
-import 'package:click_app/TaskView.dart';
+import 'package:click_app/view/TaskView.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: '目标打卡',
-      home: new TasksView(),
+      home: new TaskView(),
     );
   }
 }
