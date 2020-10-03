@@ -37,11 +37,12 @@ class StatisticsChartsView extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: <Widget>[
-                      Text("柱状图"),
+                      Text("时间使用情况柱状图（分钟）"),
                       SizedBox(height: 20,),
                       Expanded(
                         child: charts.BarChart(
                           _getData(type),
+                          animate: true,
                         ),
                       ),
                     ],
@@ -54,11 +55,15 @@ class StatisticsChartsView extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: <Widget>[
-                      Text("柱状图"),
+                      Text("时间使用情况柱状图（分钟）"),
                       SizedBox(height: 20,),
                       Expanded(
                         child: charts.PieChart(
                           _getData(type),
+                          animate: true,
+                          defaultRenderer: new charts.ArcRendererConfig(
+                            arcWidth: 60,
+                            arcRendererDecorators: [new charts.ArcLabelDecorator()])
                         ),
                       ),
                     ],
@@ -117,6 +122,7 @@ class StatisticsChartsView extends StatelessWidget {
         domainFn: (TaskStatisticsModel model, _) => model.moduleName,
         measureFn: (TaskStatisticsModel model, _) => model.time,
         data: data,
+        labelAccessorFn: (TaskStatisticsModel model, _) => '${model.moduleName}: ${model.time}',
       )
     ];
   }

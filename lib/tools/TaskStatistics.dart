@@ -67,7 +67,7 @@ class TaskStatistics {
     List<TaskStatisticsModel> modelList = new List();
     statistics.forEach((key, value) {
       print(key + "::" + value.toString());
-      modelList.add(TaskStatisticsModel(key, value));
+      modelList.add(TaskStatisticsModel(key, (value % 60)));
     });
     return modelList;
   }
