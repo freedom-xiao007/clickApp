@@ -52,15 +52,21 @@ class TaskPropertyModel {
   }
 
   bool isComplete(int index) {
-    return tasks[index]["isComplete"].toString() == "true";
+    DateTime date = DateTime.now();
+    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    return tasks[index]["isComplete"].toString() == "true" && tasks[index]["lastCompleteDate"] == today;
   }
 
   void changeState(int index) {
+    DateTime date = DateTime.now();
+    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
     if (tasks[index]["isComplete"].toString() == "true") {
       tasks[index]["isComplete"] = "false";
+      tasks[index]["lastCompleteDate"] = today;
     }
     else {
       tasks[index]["isComplete"] = "true";
+      tasks[index]["lastCompleteDate"] = today;
     }
     save();
   }

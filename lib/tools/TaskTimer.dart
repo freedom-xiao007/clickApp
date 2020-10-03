@@ -61,8 +61,6 @@ class TaskTimer {
 
   void saveStatisticsLog() {
     DateTime date = DateTime.now();
-    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
-
     Map<String, dynamic> log = new Map();
     log["taskName"] = this.task;
     log["moduleName"] = this.module;
