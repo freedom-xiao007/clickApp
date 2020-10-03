@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:click_app/model/TaskStatisticsModel.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TaskStatistics {
@@ -51,6 +52,7 @@ class TaskStatistics {
     DateTime today = DateTime.now();
     DateTime pre = getPreTime(today, type);
 
+    int amount = 0;
     Map<String, int> statistics = new Map();
     Map<String, dynamic> records = json.decode(file.readAsStringSync());
     records.forEach((key, value) {
@@ -60,6 +62,7 @@ class TaskStatistics {
         List<dynamic> record = value;
         record.forEach((element) {
           statistics.update(element["moduleName"], (value) => (value + element["second"]), ifAbsent: ()=>(element["second"]));
+          amount += element["second"];
         });
       }
     });
@@ -67,7 +70,9 @@ class TaskStatistics {
     List<TaskStatisticsModel> modelList = new List();
     statistics.forEach((key, value) {
       print(key + "::" + value.toString());
-      modelList.add(TaskStatisticsModel(key, (value % 60)));
+      int time = value % 60;
+      int percentage = ((value / amount) * 100).round();
+      modelList.add(TaskStatisticsModel(key, time, percentage));
     });
     return modelList;
   }

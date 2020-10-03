@@ -122,7 +122,7 @@ class StatisticsChartsView extends StatelessWidget {
         domainFn: (TaskStatisticsModel model, _) => model.moduleName,
         measureFn: (TaskStatisticsModel model, _) => model.time,
         data: data,
-        labelAccessorFn: (TaskStatisticsModel model, _) => '${model.moduleName}: ${model.time}',
+        labelAccessorFn: (TaskStatisticsModel model, _) => '${model.moduleName}: ${model.percentage}%',
       )
     ];
   }
