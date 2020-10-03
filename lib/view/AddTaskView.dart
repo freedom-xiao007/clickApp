@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:click_app/tools/DataInstance.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +9,9 @@ class AddTaskView extends StatefulWidget {
 
 class _AddTaskViewState extends State<AddTaskView> {
   TextEditingController _name = new TextEditingController();
-  bool _isDaily = false;
   List<bool> _cycleTime = [false, false, false, false, false, false, false];
+  List<String> taskTypes = DataInstance.getInstance().task.getTypes();
+  int _selectType;
   List<String> moduleNames = DataInstance.getInstance().module.getModules();
   int _selectModule;
 
@@ -31,17 +30,7 @@ class _AddTaskViewState extends State<AddTaskView> {
               controller: _name,
               decoration: InputDecoration(labelText: "请输入任务名称"),
             ),
-            ListTile(
-              title: const Text("请选择是否是每日任务："),
-              trailing: Switch(
-                value: _isDaily,
-                onChanged: (value) {
-                  setState(() {
-                    _isDaily = value;
-                  });
-                },
-              ),
-            ),
+
             for (var i = 0; i < 7; i += 1)
               Row(
                 children: [
@@ -79,6 +68,21 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ),
               ),
 
+            for (var i = 0; i < taskTypes.length; i++)
+              ListTile(
+                title: Text(taskTypes[i]),
+                leading: Radio(
+                  value: i,
+                  groupValue: _selectType,
+                  onChanged: (i) {
+                    print(i);
+                    setState(() {
+                       _selectType = i;
+                    });
+                  },
+                ),
+              ),
+
             Builder(
               builder: (ctx) {
                 return Column(
@@ -89,9 +93,8 @@ class _AddTaskViewState extends State<AddTaskView> {
                         Map<String, dynamic> newTask = new Map();
                         newTask['name'] = _name.text;
                         newTask['cycleTime'] = _cycleTime;
-                        newTask['isDaily'] = _isDaily;
                         newTask["moduleName"] = moduleNames[_selectModule];
-                        DataInstance.getInstance().task.add(newTask);
+                        DataInstance.getInstance().task.add(newTask, taskTypes[_selectType]);
 
                         Navigator.of(context).pop();
                       },

@@ -3,28 +3,35 @@ import 'package:click_app/tools/TaskTimer.dart';
 import 'package:flutter/material.dart';
 
 class TaskListView extends StatefulWidget {
+  final String taskType;
+
+  TaskListView({Key key, @required this.taskType}):super(key:key);
+
   @override
-  createState() => new TaskListState();
+  createState() => new TaskListState(taskType: taskType);
 }
 
 class TaskListState extends State<TaskListView> {
+  final String taskType;
+  TaskListState({Key key, @required this.taskType}):super();
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-        itemCount: DataInstance.getInstance().task.size(),
+        itemCount: DataInstance.getInstance().task.size(taskType),
         itemBuilder: (context, index) {
           return new ListTile(
-            title: new Text(DataInstance.getInstance().task.getName(index)),
+            title: new Text(DataInstance.getInstance().task.getName(index, taskType)),
             trailing: Wrap(
               children: <Widget>[
-                !DataInstance.getInstance().task.show(index)
+                !DataInstance.getInstance().task.show(index, taskType)
                     ? new IconButton(icon: new Icon(Icons.close))
                     : new IconButton(
                         icon: new Icon(
-                          !DataInstance.getInstance().task.isComplete(index)
+                          !DataInstance.getInstance().task.isComplete(index, taskType)
                               ? Icons.cancel
                               : Icons.check,
-                          color: !DataInstance.getInstance().task.isComplete(index)
+                          color: !DataInstance.getInstance().task.isComplete(index, taskType)
                               ? Colors.red
                               : Colors.green,
                         ),
@@ -46,13 +53,13 @@ class TaskListState extends State<TaskListView> {
   }
 
   _switchState(int index) {
-    DataInstance.getInstance().task.changeState(index);
+    DataInstance.getInstance().task.changeState(index, taskType);
     setState(() {});
   }
 
   /// 删除任务
   void _deleteTask(int index) {
-    DataInstance.getInstance().task.deleteTask(index);
+    DataInstance.getInstance().task.deleteTask(index, taskType);
     setState(() {});
   }
 
@@ -68,8 +75,8 @@ class TaskListState extends State<TaskListView> {
   }
 
   _startTask(int index) {
-    TaskTimer.getInstance().start(DataInstance.getInstance().task.getName(index),
-    DataInstance.getInstance().task.getModule(index));
+    TaskTimer.getInstance().start(DataInstance.getInstance().task.getName(index, taskType),
+    DataInstance.getInstance().task.getModule(index, taskType));
   }
 
   _stopTask(int index) {

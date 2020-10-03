@@ -4,16 +4,20 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class TaskPropertyModel {
-  List<dynamic> tasks = new List();
+  Map<String, dynamic> tasks = new Map();
   String className = "TaskPropertyModel";
 
   TaskPropertyModel() {
+    tasks["daily"] = new List<dynamic>();
+    tasks["week"] = new List<dynamic>();
+    tasks["temp"] = new List<dynamic>();
     initData();
   }
 
   void initData() async {
     print("Start read taskProperty.json");
 
+    List<dynamic> l = new List();
     String dir = (await getApplicationDocumentsDirectory()).path;
     File file = new File('$dir/TaskProperty.json');
     if (file.existsSync()) {
@@ -25,13 +29,13 @@ class TaskPropertyModel {
       return;
     }
     print("Read end, task list:");
-    tasks.forEach((element) {
-      print(element);
+    tasks.forEach((k, v) {
+      print(k.toString() + "::" + v.toString());
     });
   }
 
-  void add(Map<String, dynamic> task) {
-    tasks.add(task);
+  void add(Map<String, dynamic> task, String type) {
+    tasks[type].add(task);
     save();
   }
 
@@ -43,55 +47,59 @@ class TaskPropertyModel {
     print("Write file end.");
   }
 
-  int size() {
-    return tasks.length;
+  int size(String type) {
+    return tasks[type].length;
   }
 
-  String getName(int index) {
-    return tasks[index]["name"].toString();
+  String getName(int index, String type) {
+    return tasks[type][index]["name"].toString();
   }
 
-  bool isComplete(int index) {
+  bool isComplete(int index, String type) {
     DateTime date = DateTime.now();
     String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
-    return tasks[index]["isComplete"].toString() == "true" && tasks[index]["lastCompleteDate"] == today;
+    return tasks[type][index]["isComplete"].toString() == "true" && tasks[type][index]["lastCompleteDate"] == today;
   }
 
-  void changeState(int index) {
+  void changeState(int index, String type) {
     DateTime date = DateTime.now();
     String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
-    if (tasks[index]["isComplete"].toString() == "true") {
-      tasks[index]["isComplete"] = "false";
-      tasks[index]["lastCompleteDate"] = today;
+    if (tasks[type][index]["isComplete"].toString() == "true") {
+      tasks[type][index]["isComplete"] = "false";
+      tasks[type][index]["lastCompleteDate"] = today;
     }
     else {
-      tasks[index]["isComplete"] = "true";
-      tasks[index]["lastCompleteDate"] = today;
+      tasks[type][index]["isComplete"] = "true";
+      tasks[type][index]["lastCompleteDate"] = today;
     }
     save();
   }
 
-  void deleteTask(int index) {
-    tasks.removeAt(index);
+  void deleteTask(int index, String type) {
+    tasks[type].removeAt(index);
     save();
   }
 
-  bool show(int index) {
-    if (tasks[index]["isDaily"]) {
-      return true;
-    }
-
+  bool show(int index, String type) {
     int week = new DateTime.now().weekday;
-    if (tasks[index]["cycleTime"][week-1]) {
+    if (type == "daily" && tasks[type][index]["cycleTime"][week-1]) {
       return true;
     }
     return false;
   }
 
-  String getModule(int index) {
-    if (tasks[index].containsKey("moduleName")) {
-      return tasks[index]["moduleName"].toString();
+  String getModule(int index, String type) {
+    if (tasks[type][index].containsKey("moduleName")) {
+      return tasks[type][index]["moduleName"].toString();
     }
     return "其他";
+  }
+
+  List<String> getTypes() {
+    List<String> types = new List();
+    types.add("daily");
+    types.add("week");
+    types.add("temp");
+    return types;
   }
 }

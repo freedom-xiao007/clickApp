@@ -43,9 +43,9 @@ class TaskViewState extends State<TaskView> {
             ),
             body: new TabBarView(
               children: <Widget>[
-                Center(child: new TaskListView()),
-                Center(child: new TaskListView()),
-                Center(child: new TaskListView()),
+                Center(child: new TaskListView(taskType: "daily")),
+                Center(child: new TaskListView(taskType: "week")),
+                Center(child: new TaskListView(taskType: "temp")),
               ],
             ),
             bottomNavigationBar: Text(
