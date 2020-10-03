@@ -66,30 +66,42 @@ class StatisticsChartsView extends StatelessWidget {
                 ),
               ),
 
-              ListView(
-                children: <Widget>[
-                  DataTable(
-                    columns: const <DataColumn>[
-                      DataColumn(label: Text("任务")),
-                      DataColumn(label: Text("开始时间")),
-                      DataColumn(label: Text("结束时间")),
-                      DataColumn(label: Text("持续时间")),
-                    ],
-                    rows: <DataRow>[
-                      for (int i=0; i<record.length; i++)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text(record[i][0])),
-                            DataCell(Text(record[i][1])),
-                            DataCell(Text(record[i][2])),
-                            DataCell(Text(record[i][3])),
-                          ]
-                      ),
-                    ],
-                  ),
-                ]
-              ),
-
+              ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: 1,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: double.maxFinite,
+                    child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 1,
+                      itemBuilder: (BuildContext context, int index) {
+                      return DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(label: Text("任务")),
+                          DataColumn(label: Text("开始时间")),
+                          DataColumn(label: Text("结束时间")),
+                          DataColumn(label: Text("持续时间(分钟)")),
+                        ],
+                        rows: <DataRow>[
+                          for (int i=0; i<record.length; i++)
+                            DataRow(
+                                cells: <DataCell>[
+                                  DataCell(Text(record[i][0])),
+                                  DataCell(Text(record[i][1])),
+                                  DataCell(Text(record[i][2])),
+                                  DataCell(Text(record[i][3])),
+                                ]
+                            ),
+                        ],
+                      );
+                    }
+                    )
+                  );
+                }
+              )
             ],
           ),
         ));

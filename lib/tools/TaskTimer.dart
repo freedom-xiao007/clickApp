@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:click_app/tools/DataInstance.dart';
+import 'package:intl/intl.dart';
 
 
 class TaskTimer {
@@ -23,6 +24,7 @@ class TaskTimer {
   String module;
   bool timerPause = false;
   DateTime begin;
+  String beginTime;
 
   void start(String task, String module) {
     if (timer != null && timer.isActive) {
@@ -34,6 +36,7 @@ class TaskTimer {
     this.module = module;
     second = 0;
     begin = DateTime.now();
+    beginTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(begin);
     timer = new Timer.periodic(timeout, (timer) {
       handleTimeout();
     });
@@ -41,7 +44,7 @@ class TaskTimer {
 
   void handleTimeout() {
     second += 1;
-    print("任务:" + task + "已经进行了：：" + Duration(seconds: second).toString().split('.').first.padLeft(8, "0"));
+    print("任务:" + task + "进行中：：" + Duration(seconds: second).toString().split('.').first.padLeft(8, "0"));
   }
 
   void stop() {
@@ -55,7 +58,8 @@ class TaskTimer {
     if (timer == null || !timer.isActive) {
       return "无任务进行中";
     }
-    return task + "    正在进行中：：        " + Duration(seconds: second).toString().split('.').first.padLeft(8, "0");
+    int duration = DateTime.now().difference(begin).inSeconds;
+    return task + "    进行中       已过     " + Duration(seconds: duration).toString().split('.').first.padLeft(8, "0");
   }
 
   void saveStatisticsLog() {
@@ -63,7 +67,7 @@ class TaskTimer {
     Map<String, dynamic> log = new Map();
     log["taskName"] = this.task;
     log["moduleName"] = this.module;
-    log["second"] = this.second;
+    log["second"] = DateTime.now().difference(begin).inSeconds;
     log["begin"] = this.begin.toString();
     log["end"] = date.toString();
     DataInstance.getInstance().statistics.add(log);

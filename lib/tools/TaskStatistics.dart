@@ -86,9 +86,9 @@ class TaskStatistics {
         record.forEach((element) {
           List<String> temp = new List();
           temp.add(element["taskName"].toString());
-          temp.add(element["begin"].toString());
-          temp.add(element["end"].toString());
-          temp.add(element["second"].toString());
+          temp.add(element["begin"].toString().split(".")[0]);
+          temp.add(element["end"].toString().split(".")[0]);
+          temp.add((element["second"] % 60).toString());
           records.add(temp);
         });
       }
