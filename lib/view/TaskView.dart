@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:click_app/tools/TaskTimer.dart';
 import 'package:click_app/view/AddTaskView.dart';
+import 'package:click_app/view/TaskStatisticsView.dart';
 import 'package:flutter/material.dart';
 
 import 'TaskListView.dart';
@@ -29,7 +30,7 @@ class TaskViewState extends State<TaskView> {
               title: new Text('事务打卡统计'),
               actions: <Widget>[
                 new IconButton(
-                    icon: new Icon(Icons.refresh), onPressed: _refreshPage),
+                    icon: new Icon(Icons.insert_chart), onPressed: _moveToStatistics),
                 new IconButton(icon: new Icon(Icons.add), onPressed: _addTask),
               ],
               bottom: new TabBar(
@@ -66,7 +67,10 @@ class TaskViewState extends State<TaskView> {
   }
 
   /// 刷新页面
-  void _refreshPage() {
-    setState(() {});
+  void _moveToStatistics() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => TaskStatisticsView()),
+    );
   }
 }

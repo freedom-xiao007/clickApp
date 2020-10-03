@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:click_app/tools/DataInstance.dart';
-import 'package:click_app/tools/TaskStatistics.dart';
 
 
 class TaskTimer {
@@ -67,6 +66,6 @@ class TaskTimer {
     log["second"] = this.second;
     log["begin"] = this.begin.toString();
     log["end"] = date.toString();
-    TaskStatistics.add(log);
+    DataInstance.getInstance().statistics.add(log);
   }
 }
