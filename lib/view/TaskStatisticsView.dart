@@ -1,3 +1,6 @@
+import 'package:click_app/tools/DataInstance.dart';
+import 'package:click_app/view/AddNewRecordView.dart';
+import 'package:click_app/view/AddOldRecordView.dart';
 import 'package:click_app/view/StatisticsChartsView.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +17,11 @@ class _TaskStatisticsState extends State<TaskStatisticsView> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("数据统计显示"),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.add_circle), onPressed: _addNewStatistics,),
+            IconButton(icon: Icon(Icons.add_circle_outline), onPressed: _addOldStatistics,),
+            IconButton(icon: Icon(Icons.clear_all), onPressed: _RemoveAllStatistics,),
+          ],
           bottom: TabBar(
             isScrollable: true,
             tabs: <Widget>[
@@ -33,6 +41,25 @@ class _TaskStatisticsState extends State<TaskStatisticsView> {
           ],
         ),
       ));
+  }
+
+  void _addOldStatistics() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => AddOldRecordView()),
+    );
+  }
+
+  void _addNewStatistics() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => AddNewRecordView()),
+    );
+  }
+
+
+  void _RemoveAllStatistics() {
+    DataInstance.getInstance().statistics.removeAll();
   }
 }
 

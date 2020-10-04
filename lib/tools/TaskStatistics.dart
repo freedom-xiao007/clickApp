@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:click_app/model/TaskStatisticsModel.dart';
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TaskStatistics {
@@ -32,6 +31,7 @@ class TaskStatistics {
     }
     logs[today].add(log);
     file.writeAsStringSync(json.encode(logs));
+    print("Save log:" + log.toString());
   }
 
   List<String> show() {
@@ -69,10 +69,10 @@ class TaskStatistics {
 
     List<TaskStatisticsModel> modelList = new List();
     statistics.forEach((key, value) {
-      print(key + "::" + value.toString());
-      int time = value % 60;
+      int time = (value / 60).round();
       int percentage = ((value / amount) * 100).round();
       modelList.add(TaskStatisticsModel(key, time, percentage));
+      print(key + "::" + value.toString() + "--" + time.toString());
     });
     return modelList;
   }
@@ -114,5 +114,10 @@ class TaskStatistics {
       pre = pre.add(new Duration(days: -365));
     }
     return pre;
+  }
+
+  void removeAll() {
+    Map<String, dynamic> logs = new Map();
+    file.writeAsStringSync(json.encode(logs));
   }
 }

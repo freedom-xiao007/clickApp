@@ -95,6 +95,18 @@ class TaskPropertyModel {
     return "其他";
   }
 
+  String getModuleByTaskName(String taskName) {
+    tasks.forEach((key, value) {
+      List<dynamic> l = value;
+      l.forEach((element) {
+        if (element["name"] == taskName) {
+          return element["moduleName"];
+        }
+      });
+    });
+    return "其他";
+  }
+
   List<String> getTypes() {
     List<String> types = new List();
     types.add("daily");
@@ -102,4 +114,16 @@ class TaskPropertyModel {
     types.add("temp");
     return types;
   }
+
+  List<String> getAllName() {
+    List<String> names = new List();
+    tasks.forEach((key, value) {
+      List<dynamic> l = value;
+      l.forEach((element) {
+        names.add(element["name"]);
+      });
+    });
+    return names;
+  }
+
 }

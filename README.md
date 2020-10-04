@@ -155,6 +155,8 @@
     - 使用命令：flutter doctor --android-licenses
 
 ## 参考链接
+- [在中国网络环境下使用 Flutter](https://flutter.cn/community/china)
+- [中文社区网站：外网翻墙也经常挂](https://flutter.cn/docs/reference/widgets)
 - [官方教程](https://flutterchina.club/setup-windows/#%E8%8E%B7%E5%8F%96flutter-sdk)
 - 安装依赖：点击链接进入依赖组件官网，选择Installing，里面有完整的安装语句
 - 界面刷新（重绘）：调用有状态主键setState函数
@@ -171,3 +173,7 @@
 - [文本：Text class](https://api.flutter.dev/flutter/widgets/Text-class.html)
 - [单选：Radio<T> class](https://api.flutter.dev/flutter/material/Radio-class.html)
 - [图表绘制](https://google.github.io/charts/flutter/gallery.html)
+- [Flutter 常用按钮总结](https://www.jianshu.com/p/e1b79b118914)
+- [Flutter布局总结（二）：垂直或水平放置多个widget](https://blog.csdn.net/Super_666/article/details/81334895)
+- [Flutter下拉菜单DropdownButton](https://www.jianshu.com/p/cba2171bcf30)
+- [Flutter 日期时间选择类控件及国际化](https://cloud.tencent.com/developer/article/1599239)

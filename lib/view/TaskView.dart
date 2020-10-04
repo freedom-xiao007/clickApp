@@ -73,4 +73,5 @@ class TaskViewState extends State<TaskView> {
       new MaterialPageRoute(builder: (context) => TaskStatisticsView()),
     );
   }
+
 }
