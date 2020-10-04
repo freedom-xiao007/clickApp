@@ -96,15 +96,17 @@ class TaskPropertyModel {
   }
 
   String getModuleByTaskName(String taskName) {
+    String moduleName = "其他";
     tasks.forEach((key, value) {
       List<dynamic> l = value;
       l.forEach((element) {
-        if (element["name"] == taskName) {
-          return element["moduleName"];
+        if (element["name"].toString().compareTo(taskName) == 0) {
+          moduleName = element["moduleName"];
         }
       });
     });
-    return "其他";
+    print("WARRING: Can't find module name of " + taskName);
+    return moduleName;
   }
 
   List<String> getTypes() {

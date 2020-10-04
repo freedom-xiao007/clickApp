@@ -23,7 +23,6 @@ class _AddNewRecordState extends State<AddNewRecordView> {
       body: ListView(
         children: <Widget>[
           TextField(
-            autofocus: true,
             decoration: InputDecoration(
               labelText: "任务名称",
               hintText: "新任务的名称",
@@ -37,7 +36,6 @@ class _AddNewRecordState extends State<AddNewRecordView> {
           ),
 
           TextField(
-            autofocus: true,
             decoration: InputDecoration(
               labelText: "模块名称",
               hintText: "新模块的名称",

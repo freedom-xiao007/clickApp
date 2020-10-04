@@ -1,5 +1,6 @@
 import 'package:click_app/tools/DataInstance.dart';
 import 'package:click_app/tools/TaskTimer.dart';
+import 'package:click_app/view/ModifyTask.dart';
 import 'package:flutter/material.dart';
 
 class TaskListView extends StatefulWidget {
@@ -40,14 +41,16 @@ class TaskListState extends State<TaskListView> {
                 new IconButton(icon: new Icon(Icons.stop), onPressed: () => _stopTask(index)),
               ],
             ),
-//            onTap: () {
-//              Navigator.push(
-//                context,
-//                new MaterialPageRoute(
-//                    builder: (context) =>
-//                        TaskLog(task: DataInstance.getInstance().task.getName(index))),
-//              );
-//            },
+
+            onTap: () {
+              Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) =>
+                        ModifyTask(taskIndex: index, taskType: taskType)),
+              );
+            },
+
           );
         });
   }
