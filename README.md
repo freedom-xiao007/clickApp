@@ -1,144 +1,65 @@
 # 目标打卡APP
 ***
-*flutter学习试手，顺便记录下过程中的问题和感悟*
+*一个日常事务打卡和统计的APP，用于日常任务记录、任务所需时间记录、任务花费时间统计显示*
 
-*花了两天时间写了个大概，接下来边用边改吧*
+## 开发由来
+&ensp;&ensp;&ensp;&ensp;在学习的工程中，想用APP
+将其记录下面，每日或每周重复打卡记录，类似于列清单。用手机软件就比较方便，但市面上的那些软件都没有符合我的需求的，有的还要付费......
+
+&ensp;&ensp;&ensp;&ensp;感觉这种东西写起来应该不难，就学习用flutter写了一个。
+
+&ensp;&ensp;&ensp;&ensp;注意的功能就是可以无限制列任务清单、记录任务进行的所用时间，后面并对所有时间进行了图标展示，便于了解时间上的效率情况
 
 ## 界面
 &ensp;&ensp;&ensp;&ensp;基本界面如下：
 
-![page.png](./page.png)
+### 任务列表展示界面
+&ensp;&ensp;&ensp;&ensp;展示任务列表，右上角分别是统计详情按钮和任务添加按钮
 
-## 基本功能
-### 已完成
-- 任务新增：完成
-- 任务修改：完成
-- 任务显示：完成
-- 任务打卡：完成
-- 任务日志显示：完成
-- 任务完成状态重置：完成
-- 任务周期设置完善,具体到周几做：完成
+![page.png](picture/tasklist.jpg)
 
-### 未完成
-- 与系统的日历联动：未完成
-- 删除任务时提示确认
-- 任务列表展示转卡片展示尝试
-- 路由返回时触发刷新
-- 周任务的相关增加：进行中
-- 临时任务的相关增加：进行中
-- 任务提醒功能：没一个小时提醒 / 定点提醒
+### 任务信息展示界面
+&ensp;&ensp;&ensp;&ensp;任务信息页面，这里可以对现有的任务进行修改和删除
 
-#### 2020.9.26新增需求
-- 任务模块划分：锻炼健身、自我学习提升、工作
-- 可以新增任务模块
-- 支持在任务模块下增加任务
-- 在任务模块下有开始计时和结束计时功能，新增提示休息功能，如工作45，休息5（可自定义）统计累计耗时
-- 新增每日、每周、每月、每年、所有历史数据统计
+![page.png](picture/info.jpg)
+
+### 任务花费时间统计（饼图、柱状图、详情记录）
+&ensp;&ensp;&ensp;&ensp;任务花费时间统计显示，右上角分别是人工录入记录按钮（第一个是任务列表中不存在的任务，用于记录临时的一次性任务，第二个是已有任务的记录添加），第三按钮是记录情况按钮，慎用！
+
+![page.png](picture/barChart.jpg)
+![page.png](picture/pieCahrt.jpg)
+![page.png](picture/record.jpg)
 
 ## 数据结构相关（目前版本先采用本地存储)
-### 云端数据库存储格式
-#### 打卡任务属性定义:task
-```json5
-{
-  "name": "任务名称",
-  "cycle": "任务周期，int型，1为一天，2为两天",
-  "isRepeat": "是否是周期内可重复的任务，0不是，1是",
-  "frequency": "周期内完成的次数，当是周期内可以重复的任务时有效",
-  "minRepeat": "当时周期内可重复的任务时，最少完成的次数",
-  "moduleId": "所属模块ID",
-  "date": "最后进行更新日期",
-  "isComplete": "是否完成"
-}
-```
-
-#### 任务模块相关:module
-```json
-{
-  "name": "模块名称",
-  "sustained": "一周期持续时间",
-  "suspend": "休息时间",
-}
-```
-
-#### 任务打卡日志：taskLog
-```json
-{
-  "taskId": "任务id",
-  "log": [
-    {"date": "日期", "isComplete": "0|1", "frequency": "number", "second":  "花费时间分钟"} 
-  ],
-}
-```
-
-#### 任务统计：taskStatistics
-```json
-{
-  "date": "日期",
-  "log": [{"isComplete": "0|1", "frequency": "number", "taskName": "任务名称", "second":  "花费时间分钟"}]
-}
-```
-
-#### 模块计时统计：moduleStatistics
-```json
-{
-  "date": "日期",
-  "timeConsuming": [
-    {"moduleName": "模块名称", "second":  "花费时间分钟"}
-  ]
-}
-```
-
 ### 本地存储数据格式
 #### 打卡任务属性定义:taskProperty.log
-```json
-[
-  {
-    "name": "任务名称",
-    "cycle": "任务周期，int型，1为一天，2为两天",
-    "isRepeat": "是否是周期内可重复的任务，0不是，1是",
-    "frequency": "周期内完成的次数，当是周期内可以重复的任务时有效",
-    "minRepeat": "当时周期内可重复的任务时，最少完成的次数",
-    "moduleId": "所属模块ID",
-    "date": "最后进行更新日期",
-    "isComplete": "是否完成"
-  }
-]
-```
+&ensp;&ensp;&ensp;&ensp;用map-list-map三层结构进行存储，一层map区分任务类型，二层list放任务数组，三层放任务定义
 
-#### 任务模块相关:module.log
-```json
-[
-  {
-    "name": "模块名称",
-    "sustained": "一周期持续时间",
-    "suspend": "休息时间",
-  }
-]
-```
-
-#### 任务打卡日志：taskLog.log
 ```json
 {
-  "任务id": [
-    {"date": "日期", "isComplete": "0|1", "frequency": "number", "second":  "花费时间分钟"} 
-  ]
+  "daily":[
+            {
+              "name": "任务名称",
+              "cycleTime": [false, false, false, false, false, false, false], //每日任务执行时间，周1（数组元素0）为true
+              "moduleId": "所属模块名称",
+              "lastComplete": "最后完成日期",
+              "isComplete": "当天是否完成",
+              "type": "任务类型，每日daily，每周week，临时temp"
+            }
+          ],
+  "week": .......,
+  "temp": .......,
 }
+
 ```
 
 #### 任务统计：taskStatistics.log
-```json
-{
-  "日期": [
-    {"isComplete": "0|1", "frequency": "number", "taskName": "任务名称", "second":  "花费时间分钟"}
-  ]
-}
-```
+&ensp;&ensp;&ensp;&ensp;用map-list两层结构进行存储，一层map使用当天年月日作为key，用于存储当天产生的统计记录，后期便于查询统计操作
 
-#### 模块计时统计：moduleStatistics.log
 ```json
 {
   "日期": [
-    {"moduleName": "模块名称", "second":  "花费时间分钟"}
+    {"taskName": "任务名称", "moduleName": "模块名称", "second":  "秒", "begin": "任务开始时间", "end": "任务结束时间"}
   ]
 }
 ```
@@ -149,6 +70,27 @@
 - 停留在程序入口文件处（Main）
 - 上方菜单栏：Build/Flutter/Build APK
 - 等待运行完成即可
+
+## 代码结构说明
+```markdown
+- lib // 所有的源码都在这个目录下
+    - model // 放置基本数据模型（方法和属性）
+    - tools // 这里主要放置数据持有单例、任务时间花费统计操作类、任务计时类
+    - view // 这里放置页面视图
+    - main.dart
+```
+
+## 发布日志
+- 2020.10.4：V1.0.0版本完成，主要功能如下
+    - 任务新增、查看、修改、删除
+    - 任务计时、自定义计时（计时时软件突然退出的补救）
+    - 任务用时柱状图、饼图、详情查看
+    
+## 下个可能的需求开发
+- 任务提醒功能：没一个小时提醒 / 定点提醒
+- 删除任务时提示确认/必要操作的提示确认
+- 在任务模块下有开始计时和结束计时功能，新增提示休息功能，如工作45，休息5（可自定义）统计累计耗时
+- 可以新增任务模块
 
 ## 错误与修复
 - Failed to install the following Android SDK packages as some licences have not been accepted.
