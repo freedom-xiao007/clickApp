@@ -8,12 +8,10 @@ class AddTaskView extends StatefulWidget {
 }
 
 class _AddTaskViewState extends State<AddTaskView> {
-  TextEditingController _name = new TextEditingController();
   List<bool> _cycleTime = [false, false, false, false, false, false, false];
-  List<String> taskTypes = DataInstance.getInstance().task.getTypes();
-  int _selectType;
-  List<String> moduleNames = DataInstance.getInstance().module.getModules();
-  int _selectModule;
+  String _moduleName;
+  String _taskType;
+  String _taskName;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +25,27 @@ class _AddTaskViewState extends State<AddTaskView> {
           children: <Widget>[
             TextField(
               autofocus: true,
-              controller: _name,
-              decoration: InputDecoration(labelText: "请输入任务名称"),
+              decoration: InputDecoration(
+                labelText: "请输入任务名称",
+                hintText: "新任务名称",
+                prefixIcon: Icon(Icons.tab),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _taskName = value;
+                });
+              },
             ),
 
-            for (var i = 0; i < 7; i += 1)
-              Row(
-                children: [
+            Divider(
+              color: Colors.grey,
+              height: 25,
+              thickness: 5,
+            ),
+            Text("如果是daily类型任务，请选择执行时间，周一到周日：", textAlign: TextAlign.center,),
+            Row(
+              children: [
+                for (var i = 0; i < 7; i += 1)
                   Checkbox(
                     onChanged: (bool value) {
                       setState(() {
@@ -42,70 +54,79 @@ class _AddTaskViewState extends State<AddTaskView> {
                     },
                     value: _cycleTime[i],
                   ),
-                  Text(
-                    '星期 ${i + 1}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(color: Colors.black),
-                  ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
-              ),
-
-            for (var i = 0; i < moduleNames.length; i++)
-              ListTile(
-                title: Text(moduleNames[i]),
-                leading: Radio(
-                  value: i,
-                  groupValue: _selectModule,
-                  onChanged: (i) {
-                    print(i);
-                    setState(() {
-                      _selectModule = i;
-                    });
-                  },
-                ),
-              ),
-
-            for (var i = 0; i < taskTypes.length; i++)
-              ListTile(
-                title: Text(taskTypes[i]),
-                leading: Radio(
-                  value: i,
-                  groupValue: _selectType,
-                  onChanged: (i) {
-                    print(i);
-                    setState(() {
-                       _selectType = i;
-                    });
-                  },
-                ),
-              ),
-
-            Builder(
-              builder: (ctx) {
-                return Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text("添加任务"),
-                      onPressed: () {
-                        Map<String, dynamic> newTask = new Map();
-                        newTask['name'] = _name.text;
-                        newTask['cycleTime'] = _cycleTime;
-                        newTask["moduleName"] = moduleNames[_selectModule];
-                        DataInstance.getInstance().task.add(newTask, taskTypes[_selectType]);
-
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
+              ],
             ),
+
+            Row(
+              children: <Widget>[
+                Text("请选择任务所属模块:"),
+                DropdownButton(
+                  items: _buildModuleDropdownMenu(),
+                  value: _moduleName,
+                  onChanged: (value) {
+                    setState(() {
+                      _moduleName = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            Row(
+              children: <Widget>[
+                Text("请选择任务所属类型: 每日、每周、临时"),
+                DropdownButton(
+                  items: _buildTypeDropdownMenu(),
+                  value: _taskType,
+                  onChanged: (value) {
+                    setState(() {
+                      _taskType = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: RaisedButton(
+                onPressed: () => _addNewTask(),
+                child: Text("添加任务"),
+              ),
+            ),
+
           ],
         ),
       ),
     );
   }
+
+  List<DropdownMenuItem> _buildModuleDropdownMenu() {
+    List<String> moduleNames = DataInstance.getInstance().module.getModules();
+    List<DropdownMenuItem> menu = new List();
+    moduleNames.forEach((name) {
+      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+    });
+    return menu;
+  }
+
+  List<DropdownMenuItem> _buildTypeDropdownMenu() {
+    List<String> taskTypes = DataInstance.getInstance().task.getTypes();
+    List<DropdownMenuItem> menu = new List();
+    taskTypes.forEach((name) {
+      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+    });
+    return menu;
+  }
+
+  _addNewTask() {
+    Map<String, dynamic> newTask = new Map();
+    newTask['name'] = _taskName;
+    newTask['cycleTime'] = _cycleTime;
+    newTask["moduleName"] = _moduleName;
+    DataInstance.getInstance().task.add(newTask, _taskType);
+
+    Navigator.of(context).pop();
+  }
+
 }
