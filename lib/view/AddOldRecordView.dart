@@ -18,6 +18,9 @@ class _AddOldRecordState extends State<AddOldRecordView> {
     return Scaffold(
       appBar: AppBar(
         title: Text("已有任务的新记录添加"),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.save), onPressed: () => _saveRecord(),),
+        ],
       ),
       body: ListView(
         children: <Widget>[
@@ -33,10 +36,6 @@ class _AddOldRecordState extends State<AddOldRecordView> {
                   });
                 },
               ),
-              RaisedButton(
-                onPressed: () => _saveRecord(),
-                child: Text("添加保存"),
-              )
             ],
           ),
 

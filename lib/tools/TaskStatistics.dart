@@ -93,7 +93,7 @@ class TaskStatistics {
           temp.add(element["taskName"].toString());
           temp.add(element["begin"].toString().split(".")[0]);
           temp.add(element["end"].toString().split(".")[0]);
-          temp.add((element["second"] % 60).toString());
+          temp.add((element["second"] / 60).round().toString());
           records.add(temp);
         });
       }

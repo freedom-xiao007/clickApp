@@ -86,18 +86,18 @@ class StatisticsChartsView extends StatelessWidget {
                       return DataTable(
                         columns: const <DataColumn>[
                           DataColumn(label: Text("任务")),
+                          DataColumn(label: Text("持续时间(分钟)")),
                           DataColumn(label: Text("开始时间")),
                           DataColumn(label: Text("结束时间")),
-                          DataColumn(label: Text("持续时间(分钟)")),
                         ],
                         rows: <DataRow>[
                           for (int i=0; i<record.length; i++)
                             DataRow(
                                 cells: <DataCell>[
                                   DataCell(Text(record[i][0])),
+                                  DataCell(Text(record[i][3])),
                                   DataCell(Text(record[i][1])),
                                   DataCell(Text(record[i][2])),
-                                  DataCell(Text(record[i][3])),
                                 ]
                             ),
                         ],

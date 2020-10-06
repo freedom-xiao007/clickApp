@@ -20,7 +20,7 @@ class _TaskStatisticsState extends State<TaskStatisticsView> {
           actions: <Widget>[
             IconButton(icon: Icon(Icons.add_circle), onPressed: _addNewStatistics,),
             IconButton(icon: Icon(Icons.add_circle_outline), onPressed: _addOldStatistics,),
-            IconButton(icon: Icon(Icons.clear_all), onPressed: _RemoveAllStatistics,),
+//            IconButton(icon: Icon(Icons.clear_all), onPressed: _RemoveAllStatistics,),
           ],
           bottom: TabBar(
             isScrollable: true,
