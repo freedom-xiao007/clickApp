@@ -88,14 +88,17 @@ class TaskStatistics {
       DateTime date = new DateTime(int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
       if (date.compareTo(today) < 1 && date.compareTo(pre) > -1) {
         List<dynamic> record = value;
-        record.forEach((element) {
+        for (int i = 0; i < record.length; i++) {
+          Map<String, dynamic> element = record[i];
           List<String> temp = new List();
           temp.add(element["taskName"].toString());
           temp.add(element["begin"].toString().split(".")[0]);
           temp.add(element["end"].toString().split(".")[0]);
           temp.add((element["second"] / 60).round().toString());
+          temp.add(key);
+          temp.add(i.toString());
           records.add(temp);
-        });
+        }
       }
     });
 
@@ -120,4 +123,11 @@ class TaskStatistics {
     Map<String, dynamic> logs = new Map();
     file.writeAsStringSync(json.encode(logs));
   }
+
+  void deleteAt(int index, String date) {
+    Map<String, dynamic> records = json.decode(file.readAsStringSync());
+    records[date].removeAt(index);
+    file.writeAsStringSync(json.encode(records));
+  }
+
 }

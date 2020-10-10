@@ -83,6 +83,12 @@ class StatisticsChartsView extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: 1,
                       itemBuilder: (BuildContext context, int index) {
+//                      return InkWell (
+//                        onTap: () {
+//                          print(context);
+//                        },
+//                        child: Text("test"),
+//                      );
                       return DataTable(
                         columns: const <DataColumn>[
                           DataColumn(label: Text("任务")),
@@ -98,7 +104,13 @@ class StatisticsChartsView extends StatelessWidget {
                                   DataCell(Text(record[i][3])),
                                   DataCell(Text(record[i][1])),
                                   DataCell(Text(record[i][2])),
-                                ]
+                                ],
+                              onSelectChanged: (value) {
+                                  print(value);
+                                  print(record[i]);
+                                  _deleteDialog(context, record[i][4],
+                                      record[i][5]);
+                              },
                             ),
                         ],
                       );
@@ -125,6 +137,39 @@ class StatisticsChartsView extends StatelessWidget {
         labelAccessorFn: (TaskStatisticsModel model, _) => '${model.moduleName}: ${model.percentage}%',
       )
     ];
+  }
+
+  void _deleteDialog(BuildContext context, String date, String index) async {
+    bool delete = await _showDeleteConfirmDialog(context);
+    if (delete == null) {
+      print("取消删除");
+    }
+    else{
+      DataInstance.getInstance().statistics.deleteAt(int.parse(index), date);
+      print("确认删除");
+    }
+  }
+
+  Future<bool> _showDeleteConfirmDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("提示"),
+          content: Text("是否删除此条记录"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () { Navigator.of(context).pop(); },
+              child: Text("取消"),
+            ),
+            FlatButton(
+              onPressed: () { Navigator.of(context).pop(true); },
+              child: Text("删除"),
+            ),
+          ],
+        );
+      }
+    );
   }
 
 }
